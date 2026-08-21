@@ -8,7 +8,7 @@ app.use(express.json())
 
 const PORT = process.env.PORT || 8787
 const GROQ_API_KEY = process.env.GROQ_API_KEY
-const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
+const GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b'
 
 function round(n) {
   return Math.round(n)
