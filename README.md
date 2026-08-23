@@ -18,13 +18,17 @@ one click.
 ## How it's built
 
 - **Frontend**: React + TypeScript + Vite + Tailwind. All 8 SKUs from the case
-  study are hardcoded in [`src/data/skus.ts`](src/data/skus.ts).
+  study are hardcoded in [`src/data/skus.ts`](src/data/skus.ts) and load by default.
+  A "Upload CSV" control ([`src/lib/csv.ts`](src/lib/csv.ts)) lets you swap in your
+  own data — same schema (SKU, Brand, Our Price, Competitor, Buy Box, Margin Floor,
+  Last Changed), flexible header matching, bad rows skipped with a visible notice
+  rather than failing the whole file. "Reset to sample data" always gets you back.
 - **Triage logic** ([`src/lib/triage.ts`](src/lib/triage.ts)): plain, deterministic
   code — not the LLM — decides which of 4 buckets a SKU falls into. This is
   intentional: bucketing is a business rule, not a judgment call, so it should be
   cheap, instant, and testable without an API call.
 - **AI layer** ([`server/index.js`](server/index.js)): a thin Express proxy calls
-  Groq's free, OpenAI-compatible chat completions API (`llama-3.3-70b-versatile`)
+  Groq's free, OpenAI-compatible chat completions API (`openai/gpt-oss-120b`)
   with the actionable SKUs and asks for a specific price + one-sentence
   recommendation per SKU. The server validates every price against that SKU's
   margin floor before it reaches the UI — if the model returns a price at or below
@@ -38,9 +42,9 @@ one click.
 
 ## What's cut (would add with another 4 hours)
 
-- CSV upload / paste-to-ingest — hardcoded data was the explicit hint in the brief,
-  and the shape of the ingestion problem doesn't change once you have 8 rows vs. 800.
-  Would add: a CSV parser + Zod schema validation.
+- Real schema validation on CSV upload (currently best-effort regex/alias matching,
+  no quoted-field support) — would add Zod or similar plus clearer per-cell error
+  locations.
 - Persisting "Applied" state past a page refresh (currently in-memory only) — no
   backend datastore in scope for this prototype.
 - Undo on a mis-click Apply.

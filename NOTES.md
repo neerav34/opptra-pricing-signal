@@ -30,3 +30,8 @@ constraint is enforced in code, not in the prompt.
 **No Groq key present / Groq API errors:** falls back to the same deterministic
 recommender, labeled "Offline rule engine." The app is fully demoable with zero
 external dependencies.
+
+**Malformed CSV upload:** header matching is alias-based (accepts "SKU"/"ID",
+"Buy Box"/"Status", etc.) so minor header variance doesn't break ingestion. A row
+missing a required field is skipped individually with a row number in the notice
+banner, rather than rejecting the whole file over one bad row.
