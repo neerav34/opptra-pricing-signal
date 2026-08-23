@@ -27,6 +27,21 @@ labels the card "AI, floor-corrected" rather than silently swapping the number.
 Ranjit shouldn't have to trust the AI's math on a margin-critical number; the
 constraint is enforced in code, not in the prompt.
 
+**LLM picks a technically-valid but indefensible price:** early testing surfaced
+this directly — the model would sometimes recommend undercutting the competitor
+by exactly Re.1. That's between the floor and the competitor, so a naive bounds
+check would accept it, but it's a bad recommendation: a competitor's repricing
+bot would re-undercut it within the hour. The server now also rejects any price
+that doesn't clear a minimum gap (~0.5% of price) on both sides, falling back to
+the deterministic price the same way it does for a floor violation. Separately,
+the model would sometimes drop the required margin% from its own sentence
+entirely — exactly the "filler text" failure mode the brief warns about. Fixed
+by not trusting the LLM's prose at all: it now returns only a price and an
+optional short contextual reason ("price has been stale for 3 days"); the server
+always builds the actual sentence from a template, so the margin%, the gap to
+competitor, and the gap to floor are guaranteed present and correctly formatted
+every time — the LLM owns the judgment call (what price), not the arithmetic.
+
 **No Groq key present / Groq API errors:** falls back to the same deterministic
 recommender, labeled "Offline rule engine." The app is fully demoable with zero
 external dependencies.
