@@ -61,6 +61,8 @@ Rules per bucket:
 - "fix-now" (we lost the Buy Box): recommend a price below the competitor's price (to win the Buy Box back) but above marginFloor. Prefer a small, defensible undercut rather than a large one.
 - "raise-price" (we won the Buy Box with room to spare): recommend a price higher than our current price but still below the competitor's price (to protect the Buy Box), capturing some of that headroom as margin.
 
+All prices are in Indian Rupees. In the "sentence" field, always format every price as "Rs." followed by the number with no space (e.g. "Rs.1189") — never use "$" or any other currency symbol.
+
 SKUs:
 ${JSON.stringify(skus.map(s => ({ id: s.id, bucket: s.bucket, ourPrice: s.ourPrice, competitorPrice: s.competitorPrice, marginFloor: s.marginFloor })), null, 2)}
 
