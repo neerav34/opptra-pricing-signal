@@ -44,6 +44,17 @@ export interface ParsedCsvResult {
   errors: string[]
 }
 
+const CSV_HEADER = ['SKU', 'Brand', 'Marketplace', 'Our Price', 'Competitor', 'Buy Box', 'Margin Floor', 'Last Changed']
+
+// Mirrors parseSkuCsv's expected schema exactly, so a downloaded template
+// always re-uploads cleanly.
+export function skusToCsv(skus: Sku[]): string {
+  const rows = skus.map(s =>
+    [s.id, s.brand, s.marketplace, `Rs.${s.ourPrice}`, `Rs.${s.competitorPrice}`, s.buyBox, `Rs.${s.marginFloor}`, s.lastChanged].join(','),
+  )
+  return [CSV_HEADER.join(','), ...rows].join('\n')
+}
+
 // Best-effort CSV parser for the SKU schema. Deliberately simple — no quoted-field
 // support — this is a prototype input path, not a general CSV library.
 export function parseSkuCsv(text: string): ParsedCsvResult {

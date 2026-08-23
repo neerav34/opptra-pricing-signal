@@ -22,7 +22,8 @@ one click.
   A "Upload CSV" control ([`src/lib/csv.ts`](src/lib/csv.ts)) lets you swap in your
   own data — same schema (SKU, Brand, Our Price, Competitor, Buy Box, Margin Floor,
   Last Changed), flexible header matching, bad rows skipped with a visible notice
-  rather than failing the whole file. "Reset to sample data" always gets you back.
+  rather than failing the whole file. "Download sample CSV" gets you a pre-filled
+  template in the exact expected schema; "Reset to sample data" always gets you back.
 - **Triage logic** ([`src/lib/triage.ts`](src/lib/triage.ts)): plain, deterministic
   code — not the LLM — decides which of 4 buckets a SKU falls into. This is
   intentional: bucketing is a business rule, not a judgment call, so it should be

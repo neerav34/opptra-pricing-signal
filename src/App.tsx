@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { SKUS, type Sku } from './data/skus'
 import { triageAll } from './lib/triage'
 import { fetchRecommendations, type Recommendation } from './lib/recommend'
-import { parseSkuCsv } from './lib/csv'
+import { parseSkuCsv, skusToCsv } from './lib/csv'
 import { TriageBoard } from './components/TriageBoard'
 
 function App() {
@@ -64,6 +64,16 @@ function App() {
     setCsvNotice(null)
   }
 
+  function downloadSampleCsv() {
+    const blob = new Blob([skusToCsv(SKUS)], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'pricing-signal-sample.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="min-h-screen bg-[#0b0d12]">
       <header className="border-b border-slate-800 px-6 py-5 flex items-start justify-between gap-4 flex-wrap">
@@ -88,6 +98,12 @@ function App() {
               e.target.value = ''
             }}
           />
+          <button
+            onClick={downloadSampleCsv}
+            className="text-slate-500 hover:text-slate-300 underline"
+          >
+            Download sample CSV
+          </button>
           <button
             onClick={() => fileInputRef.current?.click()}
             className="rounded-lg border border-slate-700 hover:border-slate-500 text-slate-200 px-3 py-1.5 transition-colors"
